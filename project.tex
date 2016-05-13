@@ -1,0 +1,289 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage[font={small,it}]{caption}
+
+
+\title{CS63 Spring 2016\\An Ensemble Approach to Predicting Customer Satisfaction from Unideal Data}
+\author{Uriel Mandujano}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+Ensemble learning has enjoyed its fair share of the machine learning spotlight 
+because of its strong performance in recent competitions such as the Netflix 
+Challenge. Known for being an improvement over single-algorithm models, an 
+ensemble model trains several sub-models on some data and uses each sub-model's 
+classification during the testing phase to inform its final decision. In this 
+project, our ensemble model used four common machine learning algorithms 
+(Support Vector Machine, Gaussian Mixture Model, K-Nearest Neighbors and 
+K-Means), to predict Santander Bank's customer satisfaction. Although the data
+provided was suboptimal, data preprocessing, augmentation, and proper 
+parameter selection allowed us to create a model that outperforms any single
+model and that is able to differentiate satisfied from dissatified customers. 
+
+\section{Methodology}
+Now we describe the dataset used in the project, all preprocessing techniques, 
+data augmentation procedures and the models and their parameters.
+
+\subsection{Dataset}
+The dataset provided on Kaggle, the sponsor for Santander's customer 
+satisfaction prediction competition, contained 76,020 customer training 
+examples. Each customer example was comprised of 370 numerically valued 
+variables and the goal was to predict a target of one (for dissatisfied 
+customers) or zero (for satisfied customers). In this sample, only 3,008 (or 
+about 4\%) were examples of a dissastified customer. In section \ref{data_aug}, 
+we discuss modifications to this skewed dataset which attempt to alleviate the 
+difference in number of training examples. The data was further exacerbated by 
+the fact that 34 of the dimensions had no value other than zero across all the 
+training examples. Clearly, this data was suboptimal and the first step 
+towards creating a reliable classifier was to adapt the available data for 
+this specific task.
+
+\subsection{Preprocessing}
+Preprocessing is a procedure which is designed to remove any noise present in 
+the data which might confound accurate classification. For example, if dealing 
+with numerical data, some values may simply be outliers and not be 
+representative examples of the real world data and a preprocessing 
+procedure may remove or limit the amount of influence an outlier might have.
+The three we experimented with were \textit{scale}, \textit{normalize}, and 
+\textit{sparse} and are only a subset of those preprocessing steps available 
+in the skikit-learn module. The \textit{scale} process subtracts the 
+mean value for each feature and divides each feature by its standard deviation. \textit{Normalization} explicitly scales each feature to have values between 0 
+and 1. And finally, the \textit{sparse} processing step specifically scales 
+sparse data which is a sensible thing to do if the features are on different 
+scales, which, due to the anonymous nature of the data provided, is possible. 
+Each of these preprocessing procedures are difficult to justify logically and 
+we relied on empirical results to tell us which, if any, proved beneficial for 
+the classification process. 
+
+\subsection{Principal Component Analysis}
+The large dimensionality of the data as well as its skewedness made applying 
+Principal Componenet Analysis (PCA) a logical next step. If one will recall, 
+PCA determines which feature dimensions are most variable in order to minimize 
+the number of features necessary to explain the differences within the data. 
+As one might expect, the number of relevant features PCA indentified varied 
+according to the preprocessing step applied. The results of PCA with the 
+different preprocesing methods is summarized in Table \ref{table:PCA}. After 
+PCA identified which features were most salient, we extracted these select 
+features from every data point and used only these for training. Each 
+subset of the features identified by PCA was stored and later used to 
+determine which preprocessing method was most effective. One thing of note 
+is that without any preprocessing, PCA determines only 10 features to be 
+of any use but after a preprocessing step, the number of relevant features 
+increases at least three-fold (and up to over 10 times more). We were unsure
+if this increase meant preprocessing had cleaned the data enough for PCA 
+to notice stronger patterns in the data or if the step added noise. Throughout 
+our experiments, we assumed the former.
+
+\begin{table}[h]
+    \captionsetup{width=0.8\textwidth}
+    \centering
+    \begin{tabular}{ |p{2cm}||p{1cm}| }
+    \hline
+        \multicolumn{2}{|c|}{Number of Dimensions Identified by PCA} \\
+    \hline
+        None        & 10   \\
+        Sparse      & 125  \\
+        Normalized  & 55   \\
+        Scale       & 35   \\
+    \hline
+    \end{tabular}
+    \caption{Without preprocessing, PCA determines very few features are 
+        relevant at all. However, any preprocessing increases the number of 
+        relevant features, which may indicate that the data has been cleaned 
+        or that the data is more noisy}
+    \label{table:PCA}
+\end{table}
+
+\subsection{Data Augmentation} \label{data_aug}
+The final step taken to prepare the data for training was to augment it so that 
+the number of satisfied and dissatisfied training examples was equal. This was 
+a precautionary step taken to make sure the model did not become prone to 
+predict a 0 (satisfied) simply because that was a majority of the data's label. There were two techniques explored. The first was to duplicate the dissatisfied 
+training examples with added noise until the number of dissatisfied examples 
+equaled the number of satisfied examples. The noise added varied according to a 
+distribution centered about 0 with a standard deviation of 1. A random subset 
+(n=7,000) of the resulting data was then used as the training sample. 
+
+Alternatively, we cut the number of satisfied examples down to equal the 
+number of dissatisfied examples seen in the data. This greatly reduced our 
+training data meaning each classifier had significantly less data to train on 
+which hardly seems like a good idea when ou're suffering from a lack of data 
+in the first place. Experimental results showed the method of cutting the 
+data down had a large negative impact on the ensemble classifier's accuracy
+and that augmenting the data with normally distributed noise was an 
+improvement over leaving the data alone.
+
+\subsection{Sub-Models}
+The models comprising the ensemble classifier were a Gaussian Mixture Model, 
+K-Nearest Neighbors, K-Means, and Support Vector Machine. K-Nearest Neighbors 
+and K-Means are generally used as unsupervised clustering methods but also 
+work well when trying to assign new examples to pre-existing clusters. The 
+SVM attempts to project the data into a higher dimension where it is linearly 
+seperable and the GMM is an Expectation-Maximization algorithm which 
+probabilistically assigns classifications. Experimental results (not included 
+here) determined that the most accurate k for K-Nearest Neighbors was 1 and 
+the most accurate (and intuitive) k for K-Means was 2. Each model was taken 
+from the scikit-learn module.
+
+In experiments (with no preprocessing) the Mixture Model and Support Vector 
+Machine consistently outperformed the other models because they simply guessed 
+"satisfied" for every example they were asked to predict. Despite the fact 
+that the clustering models had lower overall accuracy, they did classify 
+numerous examples as "dissatisfied" as well as "satisfied". Table 
+\ref{table:models} summarizes the accuracies for each sub-model on unprocessed 
+data. These tests gave rise to a new goal for the ensemble model: try to 
+increase prediction accuracy while also increasing the ability to distinguish 
+dissatisfied from satisfied examples.
+
+\begin{table}
+    \captionsetup{width=0.8\textwidth}
+    \centering
+    \begin{tabular}{ |p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+    \hline
+        \multicolumn{6}{|c|}{Model Performance} \\
+    \hline
+        & Accuracy & False Neg & False Pos & True Neg & True Pos \\
+    \hline
+        SVM    & .96 & 602 & 1 & 0 & 14,619 \\
+        GMM    & .96 & 602 & 0 & 0 & 14,602 \\
+        KMeans & .96 & 601 & 23 & 0 & 14,580 \\
+        KNN    & .91 & 549 & 747 & 53 & 13,855 \\
+    \hline
+    \end{tabular}
+    \caption{Accuracies as well as False Positive, False Negative, True 
+    Positive, and True Negative rates averaged over 5 folds with no pre-
+    processing. SVM and GMM models rarely predict anything to be Negative}
+    \label{table:models}
+\end{table}
+
+\subsection{Experimental Ensemble Choices}
+The final step before running the ensemble classifier was to determine which 
+pre-processing step was most helpful for classifying and to assign prediction 
+weights to each sub-model. To do so, we ran each model using the 
+\textit{sparse}, \textit{scale}, and \textit{normalize} processing step and 
+took average accuracies using 5-fold cross validation. The models were fit with the training data and then asked to predict the test data. We concluded that 
+the \textit{scale} step yielded the highest overall accuracy and used it to 
+determine the weights for each smaller model. The final weights were: 
+.28 (SVM), .27 (KNN), .28 (GMM), .17 (KMeans). Table \ref{results_prepro} 
+below summarizes the results for each model for every processing procedure. 
+One alternative that we tried was simply taking a majority vote but this did 
+not seem to work as well because half of the sub-models refused to predict 
+an "dissatisfied" customer which yielded little improvement over any one 
+model. Instead, if the sum of the model's weights times the prediction was 
+over a threshhold of .4, we had the ensemble system output a 1, 
+(dissatisfied) instead.
+
+\begin{table}[h]
+    \label{results_prepro}
+    \begin{minipage}{.3\linewidth}
+        \centering
+        \begin{tabular}{ |p{2cm}||p{1cm}| }
+            \hline
+            \multicolumn{2}{|c|}{Sparse-processing Results} \\
+            \hline
+                SVM     & .9604   \\
+                KNN     & .9373   \\
+                KMeans  & .3955   \\
+                GMM     & .9604   \\
+            \hline
+        \end{tabular}
+    \end{minipage}%
+    \begin{minipage}{.3\linewidth}
+        \centering
+        \begin{tabular}{ |p{2cm}||p{1cm}| }
+            \hline
+            \multicolumn{2}{|c|}{Scale-processing Results} \\
+            \hline
+                SVM     & .9604   \\
+                KNN     & .9363   \\
+                KMeans  & .5890   \\
+                GMM     & .9604   \\
+            \hline
+        \end{tabular}
+    \end{minipage} 
+    \begin{minipage}{.3\linewidth}
+        \centering
+        \begin{tabular}{ |p{2cm}||p{1cm}| }
+            \hline
+            \multicolumn{2}{|c|}{Normalize-processing Results} \\
+            \hline
+                SVM     & .9604   \\
+                KNN     & .9336   \\
+                KMeans  & .5551   \\
+                GMM     & .9604   \\
+            \hline
+        \end{tabular}
+    \end{minipage} 
+    \caption{Model Accuracies under different preprocessing steps}
+\end{table}
+
+\section{Results}
+
+After determining the best preprocessing step was \textit{scale} and 
+setting the weights for each model, we ran 5-fold cross validation to 
+determine the overall accuracy of the ensemble method. By augmenting the data 
+with noised-up versions of the dissatisfied data, we were able to create an 
+ensemble classifier that correctly classified 99 percent of the data across 
+three folds, for an average of .9616, up from the SVM and GMM's accuracy of 
+.9604. Although the increase in accuracy is not substantial, the increase in 
+differentiation between satisfied and dissatisfied is, as is evident from 
+Table \ref{table:ensemble}. The ensemble method is able to acheive high 
+levels of accuracy as well as classify differences in negative and positive 
+examples, something no other classifier was able to acheive on its own. 
+
+\begin{table}
+    \captionsetup{width=0.8\textwidth}
+    \centering
+    \begin{tabular}{ |p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
+    \hline
+        \multicolumn{6}{|c|}{Ensemble Model Performance} \\
+    \hline
+        & Accuracy & False Neg & False Pos & True Neg & True Pos \\
+    \hline
+        Ensemble    & .9616 & 23 & 2,690 & 11,913 & 14,580 \\
+    \hline
+    \end{tabular}
+    \caption{Accuracies as well as False Positive, False Negative, True 
+    Positive, and True Negative rates averaged over 5 folds}
+    \label{table:ensemble}
+\end{table}
+
+Although the ensemble model is better able to distinguish satisfied and 
+dissatisfied customers, it still habitually confuses the two. Perhaps this 
+could be fixed by training on more than the 7,000 training examples which we 
+used in this project. There is no reason to stop training at only 7,000 
+examples besides computational cost so one can assume that training on all of 
+the available data in each fold would only increase performance (each fold 
+contains about 14,000 examples so we only trained on about half the available 
+training data in a fold and tested on all of the fold's test data). Also, we 
+were unable to try every combination of model parameter, pre-processing step, 
+and data augmentation technique but it is very well possible that the 
+combination for performing even better lies within the options this project 
+has laid out.
+
+\section{Conclusions}
+
+Our final ensemble method was successfully able to learn to classify 
+dissatisfied from satisfied customers based off of Santander's suboptimal data 
+because of data augmentation techniques, thorough preprocessing, and 
+principal component analysis and because of sub-model prediction weighting.
+One can argue that the ensemble method is also "smarter" because it acheives 
+its higher accuracy not by guessing "satisfied" for every example (as the 
+SVM and GMM models did) but by performing an analysis to determine which 
+examples are most similar to "satisfied" customers and which are most similar 
+to "dissatisfied" customers. Despite this success, one cannot help but wonder 
+if the success of the ensemble method is because of its model re-combination 
+or mostly because of the data augmentation. Due to time constraints, we could 
+not create baselines for the sub-models using only data augmentation. 
+However, this does not does not detract from the fact that our ensemble 
+classifier is clearly more useful for predicting Satander's customer 
+satisfaction than any of the sub-models. Perhaps if Santander provided more example data for dissatisfied customers, our model could acheive an even 
+higher accuracy without the need for any data augmentation.
+
+\end{document}

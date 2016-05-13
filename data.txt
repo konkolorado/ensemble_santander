@@ -1,0 +1,127 @@
+# ------------------------------------------------------- #
+<Loading data>
+Preprocessing step is scale
+<Increasing negative examples>
+/-------------------------
+false positives: 62 ( 0.00212292415682 )
+false negatives: 12 ( 0.000410888546482 )
+true positives: 27963 ( 0.957473035439 )
+true negatives: 1168 ( 0.0399931518576 )
+/-------------------------
+(ENSEMBLE) Percent correct is 0.997466187297
+/-------------------------
+false positives: 29 ( 0.000992980653998 )
+false negatives: 11 ( 0.000376647834275 )
+true positives: 28036 ( 0.95997260743 )
+true negatives: 1129 ( 0.0386577640815 )
+/-------------------------
+(ENSEMBLE) Percent correct is 0.998630371512
+/-------------------------
+false positives: 22 ( 0.00075329566855 )
+false negatives: 10532 ( 0.360623180962 )
+true positives: 16900 ( 0.578668036295 )
+true negatives: 1751 ( 0.0599554870741 )
+/-------------------------
+(ENSEMBLE) Percent correct is 0.638623523369
+/-------------------------
+false positives: 0 ( 0.0 )
+false negatives: 2213 ( 0.0757746961137 )
+true positives: 0 ( 0.0 )
+true negatives: 26992 ( 0.924225303886 )
+/-------------------------
+(ENSEMBLE) Percent correct is 0.924225303886
+/-------------------------
+false positives: 0 ( 0.0 )
+false negatives: 681 ( 0.0233187234625 )
+true positives: 0 ( 0.0 )
+true negatives: 28523 ( 0.976681276537 )
+/-------------------------
+(ENSEMBLE) Percent correct is 0.976681276537
+
+# ------------------------------------------------------- #
+
+<Loading data>
+Preprocessing step is scale
+<Decreasing positive training examples>
+/---------------------------------------------/
+false positives: 106 ( 0.0880398671096 )
+false negatives: 0 ( 0.0 )
+true positives: 1098 ( 0.91196013289 )
+true negatives: 0 ( 0.0 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.91196013289
+/---------------------------------------------/
+false positives: 124 ( 0.103075644223 )
+false negatives: 0 ( 0.0 )
+true positives: 1079 ( 0.896924355777 )
+true negatives: 0 ( 0.0 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.896924355777
+/---------------------------------------------/
+false positives: 34 ( 0.0282626766417 )
+false negatives: 528 ( 0.438902743142 )
+true positives: 567 ( 0.471321695761 )
+true negatives: 74 ( 0.0615128844555 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.532834580216
+/---------------------------------------------/
+false positives: 0 ( 0.0 )
+false negatives: 1124 ( 0.934330839568 )
+true positives: 0 ( 0.0 )
+true negatives: 79 ( 0.0656691604323 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.0656691604323
+/---------------------------------------------/
+false positives: 0 ( 0.0 )
+false negatives: 1143 ( 0.950124688279 )
+true positives: 0 ( 0.0 )
+true negatives: 60 ( 0.0498753117207 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.0498753117207
+# ------------------------------------------------------- #
+
+<Loading data>
+Preprocessing step is scale
+<No data augmentation>
+/---------------------------------------------/
+false positives: 0 ( 0.0 )
+false negatives: 592 ( 0.03893712181 )
+true positives: 14612 ( 0.96106287819 )
+true negatives: 0 ( 0.0 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.96106287819
+/---------------------------------------------/
+false positives: 0 ( 0.0 )
+false negatives: 638 ( 0.0419626414102 )
+true positives: 14566 ( 0.95803735859 )
+true negatives: 0 ( 0.0 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.95803735859
+/---------------------------------------------/
+false positives: 0 ( 0.0 )
+false negatives: 573 ( 0.0376874506709 )
+true positives: 14631 ( 0.962312549329 )
+true negatives: 0 ( 0.0 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.962312549329
+/---------------------------------------------/
+false positives: 0 ( 0.0 )
+false negatives: 620 ( 0.0407787424362 )
+true positives: 14584 ( 0.959221257564 )
+true negatives: 0 ( 0.0 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.959221257564
+/---------------------------------------------/
+false positives: 0 ( 0.0 )
+false negatives: 585 ( 0.0384767166535 )
+true positives: 14619 ( 0.961523283346 )
+true negatives: 0 ( 0.0 )
+/---------------------------------------------/
+(ENSEMBLE) Percent correct is 0.961523283346
+# ------------------------------------------------------- #
+# ------------------------------------------------------- #
+# ------------------------------------------------------- #
+# ------------------------------------------------------- #
+# ------------------------------------------------------- #
+# ------------------------------------------------------- #
+# ------------------------------------------------------- #

@@ -1,0 +1,18 @@
+Explain how to run your code here.
+
+Project description available at:
+https://www.kaggle.com/c/santander-customer-satisfaction/data
+
+First you need access to my data available on:
+/scratch/umanduj2/cs63/data/
+
+Alternatively, you can download the data from Kaggle 
+and rewrite line 34 in parser.py to point to wherever
+your version of the data lies.
+
+Then, you need simply run <python ensemble.py> and 
+the program will print out what it's doing (PCA, 
+extracting features, augmenting data). When finished,
+the program will print data regarding false positives,
+false negatives, true positives, true negatives and 
+classification accuracy.
